@@ -63,6 +63,32 @@ void getPasswordFromUser(string& password) {
         }
     } while (password.length() < 8 || !containsNumberAndSpecialChar(password));
 }
+
+
+bool getYesOrNoResponse(const string& question) {
+    string response;
+    do {
+        cout << question << " (yes/no): ";
+        getline(cin, response);
+
+      
+        for (auto& c : response) c = tolower(c);
+
+    } while (response != "yes" && response != "no");
+
+    return response == "yes";
+}
+
+void storePassword(const string& username, const string& platform, const string& password, const string& key) {
+    ofstream file("passwords.txt", ios::app);
+    if (!file.is_open()) {
+        cerr << "Error" << endl;
+        return;
+    }
+    file << username << " " << platform << " " << vigenereCipher(password, key, true) << "\n";
+    file.close();
+}
+
 //Testing Purposes
 int main() {
     
@@ -76,7 +102,7 @@ int main() {
 
     
     string test = "test";
-    string key = "Vigenere";
+    string key = "testkey";
     string encryptedMessage = vigenereCipher(test, key, true);
     string decryptedMessage = vigenereCipher(encryptedMessage, key, false);
 
