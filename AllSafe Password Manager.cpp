@@ -36,6 +36,7 @@ bool containsNumberAndSpecialChar(const string& str) {
     }
     return hasNumber && hasSpecial;
 }
+
 string generatePassword(int length) {
     string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
     string password;
@@ -63,7 +64,45 @@ void getPasswordFromUser(string& password) {
         }
     } while (password.length() < 8 || !containsNumberAndSpecialChar(password));
 }
+bool isUsernameTaken(const string& username) {
+    ifstream file("usernames&passwords.txt");
+    string storedUsername;
+    while (file >> storedUsername) {
+        if (storedUsername == username) {
+            return true; 
+        }
+        file.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return false;
+}
 
+void registerUser(const string& username, const string& password) {
+    if (!isUsernameTaken(username)) {
+        ofstream usersFile("usernames&passwords.txt", ios::app);
+        if (usersFile.is_open()) {
+            usersFile << username << " " << vigenereCipher(password, "V1gn3r3C1ph3r", true) << "\n";
+            cout << "Registration successful." << endl;
+        } else {
+            cerr << "Error occurred while processing your request!" << endl;
+        }
+        usersFile.close();
+    } else {
+        cout << "Username is already taken." << endl;
+    }
+}
+
+string retrievePassword(const string& username, const string& platform, const string& key) {
+    ifstream file("passwords.txt");
+    string storedUsername, storedPlatform, storedPassword;
+    while (file >> storedUsername >> storedPlatform >> storedPassword) {
+        if (storedUsername == username && storedPlatform == platform) {
+            return vigenereCipher(storedPassword, key, false); 
+        }
+    
+        file.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return "";
+}
 
 bool getYesOrNoResponse(const string& question) {
     string response;
