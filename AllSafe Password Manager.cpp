@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
+#include <ctime>
 using namespace std;
 
 string vigenereCipher(const string& text, const string& key, bool encrypt) {
@@ -27,3 +27,14 @@ bool containsNumberAndSpecialChar(const string& str) {
     }
     return hasNumber && hasSpecial;
 }
+string generatePassword(int length) {
+    string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+    string password;
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    for (int i = 0; i < length; ++i) {
+        password += chars[rand() % chars.size()];
+    }
+    return password;
+}
+
