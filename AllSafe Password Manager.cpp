@@ -1,20 +1,29 @@
-// AllSafe Password Manager.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+#include <string>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+string vigenereCipher(const string& text, const string& key, bool encrypt) {
+    string result;
+    int keyIndex = 0, keyLength = key.length();
+    for (char c : text) {
+        if (isalpha(c)) {
+            char base = isupper(c) ? 'A' : 'a';
+            int offset = (encrypt ? 1 : -1) * (tolower(key[keyIndex % keyLength]) - 'a');
+            c = static_cast<char>(((c - base + offset + 26) % 26) + base);
+            keyIndex++;
+        }
+        result += c;
+    }
+    return result;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+bool containsNumberAndSpecialChar(const string& str) {
+    bool hasNumber = false, hasSpecial = false;
+    for (char c : str) {
+        if (c >= '0' && c <= '9') hasNumber = true;
+        else if (!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && !(c == ' ')) hasSpecial = true;
+    }
+    return hasNumber && hasSpecial;
+}
