@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+
+
 using namespace std;
 
 string vigenereCipher(const string& text, const string& key, bool encrypt) {
