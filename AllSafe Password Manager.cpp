@@ -39,4 +39,26 @@ string generatePassword(int length) {
     }
     return password;
 }
+//Testing Purposes
+int main() {
+    
+    int passwordLength = 12;
+    string generatedPassword = generatePassword(passwordLength);
+    cout << "Generated password: " << generatedPassword << endl;
 
+    
+    cout << "Does the generated password contain at least one number and one special character? "
+         << (containsNumberAndSpecialChar(generatedPassword) ? "Yes" : "No") << endl;
+
+    
+    string test = "test";
+    string key = "Vigenere";
+    string encryptedMessage = vigenereCipher(test, key, true);
+    string decryptedMessage = vigenereCipher(encryptedMessage, key, false);
+
+    cout << "Original message: " << test << endl;
+    cout << "Encrypted message: " << test << endl;
+    cout << "Decrypted message: " << test << endl;
+
+    return 0;
+}
