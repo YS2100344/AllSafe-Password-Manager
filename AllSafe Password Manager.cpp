@@ -46,6 +46,23 @@ string generatePassword(int length) {
     }
     return password;
 }
+void getPasswordFromUser(string& password) {
+    do {
+        cout << "Enter your password, it must include at least 1 number and 1 special character: ";
+        getline(cin, password);
+
+        
+        bool hasNumber = false, hasSpecial = false;
+        for (char c : password) {
+            if (c >= '0' && c <= '9') hasNumber = true;
+            if (!isalnum(c)) hasSpecial = true; 
+        }
+
+        if (!hasNumber || !hasSpecial || password.length() < 8) {
+            cout << "Password does not meet requirements.\n";
+        }
+    } while (password.length() < 8 || !containsNumberAndSpecialChar(password));
+}
 //Testing Purposes
 int main() {
     
