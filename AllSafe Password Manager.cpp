@@ -8,7 +8,7 @@
 
 using namespace std;
 
-// Encrypt or decrypt text using Vigenère cipher.
+// Encrypt or decrypt text using Vigenère cipher
 
 string vigenereCipher(const string& text, const string& key, bool encrypt) {
     string result;
@@ -181,6 +181,33 @@ bool loginUser(string& username) {
 }
 
 
+// void deletePassword(const string& username, const string& platform, const string& key) {
+//     vector<string> lines;
+//     string line, storedUsername, storedPlatform, storedPassword;
+//     bool found = false;
+
+//     ifstream file("passwords.txt");
+//     while (getline(file, line)) {
+//         istringstream iss(line);
+//         iss >> storedUsername >> storedPlatform >> storedPassword;
+//         if (storedUsername == username && vigenereCipher(storedPlatform, key, false) == platform) {
+//             found = true;
+//             continue;
+//         }
+//         lines.push_back(line);
+//     }
+//     file.close();
+
+//     if (found) {
+//         ofstream outFile("passwords.txt", ios::trunc);
+//         for (const auto& l : lines) {
+//             outFile << l << endl;
+//         }
+//         outFile.close();
+//     } else {
+//         cout << "No password entry found for " << platform << "." << endl;
+//     }
+// }
 
 
 int main() {
