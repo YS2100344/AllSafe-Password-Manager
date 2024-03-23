@@ -127,7 +127,33 @@ void storePassword(const string& username, const string& platform, const string&
     file << username << " " << platform << " " << vigenereCipher(password, key, true) << "\n";
     file.close();
 }
+bool loginUser() {
+    string username, password, fileUsername, filePasswordEncrypted, key = "V1gn3r3C1ph3r";
+    cout << "Input Username: ";
+    getline(cin, username);
 
+    ifstream usersFile("usernames&passwords.txt");
+    if (!usersFile.is_open()) {
+        cerr << "Unable to open users file." << endl;
+        return false;
+    }
+
+    while (usersFile >> fileUsername >> filePasswordEncrypted) {
+        if (fileUsername == username) {
+            cout << "Input Password: ";
+            getline(cin, password);
+            if (vigenereCipher(filePasswordEncrypted, key, false) == password) {
+                cout << "Login successful." << endl;
+                return true;
+            } else {
+                cout << "Invalid password." << endl;
+                return false;
+            }
+        }
+    }
+    cout << "Username not found." << endl;
+    return false;
+}
 //Testing Purposes
 int main() {
     
