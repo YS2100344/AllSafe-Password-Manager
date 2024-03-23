@@ -3,7 +3,7 @@
 #include <string>
 #include <ctime>
 #include <algorithm>
-
+#include <cctype>
 using namespace std;
 
 string vigenereCipher(const string& text, const string& key, bool encrypt) {
