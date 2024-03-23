@@ -172,26 +172,60 @@ bool loginUser(string& username) {
     return false; 
 }
 
-//Testing Purposes
 int main() {
-    
-    int passwordLength = 12;
-    string generatedPassword = generatePassword(passwordLength);
-    cout << "Generated password: " << generatedPassword << endl;
+    string username;
 
-    
-    cout << "Does the generated password contain at least one number and one special character? "
-         << (containsNumberAndSpecialChar(generatedPassword) ? "Yes" : "No") << endl;
+    if (!loginUser(username)) {
+        cout << "Exiting program." << endl;
+        return 1;
+    }
 
-    
-    string test = "test";
-    string key = "testkey";
-    string encryptedMessage = vigenereCipher(test, key, true);
-    string decryptedMessage = vigenereCipher(encryptedMessage, key, false);
+    cout << "Welcome to AllSafe Password Management Application, " << username << "!" << endl;
+    string platform, password;
+    int choice;
 
-    cout << "Original message: " << test << endl;
-    cout << "Encrypted message: " << test << endl;
-    cout << "Decrypted message: " << test << endl;
+    cout << "1: Store Password\n2: Retrieve Password\nEnter choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        cout << "Platform name: ";
+        getline(cin, platform); 
+
+        bool generatePass = getYesOrNoResponse("Would you like your password to be generated (recommended)?");
+        if (generatePass) {
+            int passLength = 0;
+            do {
+                cout << "Enter password length (minimum 8 characters): ";
+                cin >> passLength;
+                
+                if (passLength < 8) {
+                    cout << "Password length must be at least 8 characters." << endl;
+                }
+            } while (passLength < 8);
+            password = generatePassword(passLength);
+            cout << "Generated Password: " << password << endl;
+        }
+        else {
+            getPasswordFromUser(password);
+        }
+
+        storePassword(username, platform, password, "V1gn3r3C1ph3r");
+        cout << "Password stored successfully for " << platform << "." << endl;
+    }
+    else if (choice == 2) {
+        cout << "Platform Name: ";
+        getline(cin, platform); 
+        password = retrievePassword(username, platform, "V1gn3r3C1ph3r");
+        if (password != "Platform not found! Kindly Try Again!.") {
+            cout << "Password for " << platform << ": " << password << endl;
+        }
+        else {
+            cout << "No password found for " << platform << "." << endl;
+        }
+    }
+    else {
+        cout << "Error Occurred! Kindly pick from the choices available!" << endl;
+    }
 
     return 0;
 }
