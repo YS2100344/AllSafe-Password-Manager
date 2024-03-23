@@ -43,9 +43,8 @@ string generatePassword(int length) {
     srand(static_cast<unsigned int>(time(nullptr)));
     do {
         password.clear();
-        for (size_t i = 0; i < length; ++i) { // Change 'int' to 'size_t'
-            password += chars[rand() % chars.size()]; // No need to cast size() to int
-        }
+        for (size_t i = 0; i < length; ++i) { 
+            password += chars[rand() % chars.size()]; 
     } while (!containsNumberAndSpecialChar(password));
     return password;
 }
@@ -111,46 +110,68 @@ bool getYesOrNoResponse(const string& question) {
     do {
         cout << question << " (yes/no): ";
         getline(cin, response);
-        transform(response.begin(), response.end(), response.begin(), ::tolower); // Use of transform
+        transform(response.begin(), response.end(), response.begin(), ::tolower); 
     } while (response != "yes" && response != "no");
     return response == "yes";
 }
 void storePassword(const string& username, const string& platform, const string& password, const string& key) {
     ofstream file("passwords.txt", ios::app);
-    if (!file.is_open()) {
-        cerr << "Error" << endl;
-        return;
+    if (file.is_open()) {
+        file << username << " " << platform << " " << vigenereCipher(password, key, true) << "\n";
     }
-    file << username << " " << platform << " " << vigenereCipher(password, key, true) << "\n";
+    else {
+        cerr << "Unable to open file to store passwords." << endl;
+    }
     file.close();
 }
-bool loginUser() {
-    string username, password, fileUsername, filePasswordEncrypted, key = "V1gn3r3C1ph3r";
+
+bool loginUser(string& username) {
     cout << "Input Username: ";
     getline(cin, username);
+    username = trim(username); 
 
-    ifstream usersFile("usernames&passwords.txt");
-    if (!usersFile.is_open()) {
-        cerr << "Unable to open users file." << endl;
-        return false;
-    }
+    if (isUsernameTaken(username)) {
+        ifstream usersFile("usernames&passwords.txt");
+        string storedUsername, storedPasswordEncrypted;
+        while (usersFile >> storedUsername >> storedPasswordEncrypted) {
+            if (storedUsername == username) {
+                string password;
+                cout << "Input Password: ";
+                getline(cin, password);
+                password = trim(password); 
 
-    while (usersFile >> fileUsername >> filePasswordEncrypted) {
-        if (fileUsername == username) {
-            cout << "Input Password: ";
-            getline(cin, password);
-            if (vigenereCipher(filePasswordEncrypted, key, false) == password) {
-                cout << "Login successful." << endl;
-                return true;
-            } else {
-                cout << "Invalid password." << endl;
-                return false;
+                string decryptedStoredPassword = vigenereCipher(storedPasswordEncrypted, "PaS28KeYyOuS3F", false);
+                decryptedStoredPassword = trim(decryptedStoredPassword); 
+
+                if (decryptedStoredPassword == password) {
+                    usersFile.close(); 
+                    cout << "Welcome back, " << username << "!" << endl;
+                    return true; 
+                else {
+                    cout << "Invalid password." << endl;
+                }
             }
         }
+        usersFile.close(); 
     }
-    cout << "Username not found." << endl;
-    return false;
+    else { 
+        cout << "First Time Here? " << endl;
+        if (getYesOrNoResponse("Would you like to sign up to AllSafe Password Manager?")) {
+            string password;
+            getPasswordFromUser(password);
+            registerUser(username, password);
+            cout << "Sign up successful! Welcome, " << username << "!" << endl;
+            return true;
+        }
+        else {
+            cout << "Error orccured while processing your request!" << endl;
+            return false;
+        }
+    }
+
+    return false; 
 }
+
 //Testing Purposes
 int main() {
     
