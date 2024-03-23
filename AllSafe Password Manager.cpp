@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <ctime>
-
+#include <algorithm>
 
 using namespace std;
 
@@ -111,15 +111,10 @@ bool getYesOrNoResponse(const string& question) {
     do {
         cout << question << " (yes/no): ";
         getline(cin, response);
-
-      
-        for (auto& c : response) c = tolower(c);
-
+        transform(response.begin(), response.end(), response.begin(), ::tolower); // Use of transform
     } while (response != "yes" && response != "no");
-
     return response == "yes";
 }
-
 void storePassword(const string& username, const string& platform, const string& password, const string& key) {
     ofstream file("passwords.txt", ios::app);
     if (!file.is_open()) {
