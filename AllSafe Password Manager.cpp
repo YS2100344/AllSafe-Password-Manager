@@ -41,10 +41,12 @@ string generatePassword(int length) {
     string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
     string password;
     srand(static_cast<unsigned int>(time(nullptr)));
-
-    for (int i = 0; i < length; ++i) {
-        password += chars[rand() % chars.size()];
-    }
+    do {
+        password.clear();
+        for (size_t i = 0; i < length; ++i) { // Change 'int' to 'size_t'
+            password += chars[rand() % chars.size()]; // No need to cast size() to int
+        }
+    } while (!containsNumberAndSpecialChar(password));
     return password;
 }
 void getPasswordFromUser(string& password) {
